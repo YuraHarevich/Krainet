@@ -1,0 +1,48 @@
+server:
+  port: 8020
+spring:
+  application:
+    name: notification-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_HOST:ms_kafka}:9092
+    topic:
+      user: notification-topic
+    consumer:
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_HOST:ms_kafka}:9092
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      observation-enabled: true
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.type.mapping: notification:ru.kharevich.notificationservice.model.Notification
+eureka:
+  client:
+    service-url:
+      defaultZone: http://ms-discovery:8761/eureka
+
+notification:
+  email:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    tags:
+      application: notification-service
+  zipkin:
+    tracing:
+      endpoint: ${TEMPO_ZIPKIN_URL:http://tempo:9411/api/v2/spans}
+  tracing:
+    sampling:
+      probability: 1.0
