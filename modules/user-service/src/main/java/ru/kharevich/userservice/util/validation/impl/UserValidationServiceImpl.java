@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static ru.kharevich.userservice.util.constants.UserServiceConstantMessages.USER_NOT_FOUND;
+import static ru.kharevich.userservice.util.constants.UserServiceConstantMessages.USER_NOT_FOUND_BY_ID;
+import static ru.kharevich.userservice.util.constants.UserServiceConstantMessages.USER_NOT_FOUND_BY_USERNAME;
 import static ru.kharevich.userservice.util.constants.UserServiceConstantMessages.USER_WITH_SUCH_EMAIL_ALREADY_EXISTS;
 import static ru.kharevich.userservice.util.constants.UserServiceConstantMessages.USER_WITH_SUCH_EMAIL_OR_USERNAME_ALREADY_EXISTS;
 import static ru.kharevich.userservice.util.constants.UserServiceConstantMessages.USER_WITH_SUCH_USERNAME_ALREADY_EXISTS;
@@ -24,7 +25,7 @@ public class UserValidationServiceImpl implements UserValidationService {
     private final UserRepository userRepository;
 
     public void alreadyExistsByUsernameCheck(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
         user.ifPresent(u-> {
             throw new UserAlreadyExistsException(USER_WITH_SUCH_USERNAME_ALREADY_EXISTS.formatted(username));
         });
@@ -45,7 +46,28 @@ public class UserValidationServiceImpl implements UserValidationService {
             }
         }
         else  {
-            throw new UserNotFoundException(USER_NOT_FOUND);
+            throw new UserNotFoundException(USER_NOT_FOUND_BY_ID);
+        }
+
+        return user.get();
+
+    }
+
+    public User alreadyExistsByUsernameOrEmailExceptPresentUsernameOrEmail(String username, String email, String originUsername) {
+        Optional<User> user = userRepository.findByUsernameIgnoreCase(originUsername);
+        List<User> usersWithUsernameAndEmailMatch = userRepository.findByEmailOrUsername(email, username);
+        if(user.isPresent()) {
+            if(usersWithUsernameAndEmailMatch.size() == 1) {
+                if(!usersWithUsernameAndEmailMatch.getFirst().getUsername().equals(username)) {
+                    throw new UserAlreadyExistsException(USER_WITH_SUCH_EMAIL_OR_USERNAME_ALREADY_EXISTS);
+                }
+            }
+            if(usersWithUsernameAndEmailMatch.size() == 2) {
+                throw new UserAlreadyExistsException(USER_WITH_SUCH_EMAIL_OR_USERNAME_ALREADY_EXISTS);
+            }
+        }
+        else  {
+            throw new UserNotFoundException(USER_NOT_FOUND_BY_ID);
         }
 
         return user.get();
@@ -65,7 +87,18 @@ public class UserValidationServiceImpl implements UserValidationService {
             return user.get();
         }
         else {
-            throw new UserNotFoundException(USER_NOT_FOUND.formatted(id.toString()));
+            throw new UserNotFoundException(USER_NOT_FOUND_BY_ID.formatted(id.toString()));
         }
     }
+
+    public User findIfExistsByUsername(String username) {
+        Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
+        if(user.isPresent()) {
+            return user.get();
+        }
+        else {
+            throw new UserNotFoundException(USER_NOT_FOUND_BY_USERNAME.formatted(username));
+        }
+    }
+
 }

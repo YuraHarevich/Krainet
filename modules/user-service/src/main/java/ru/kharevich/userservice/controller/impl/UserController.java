@@ -2,6 +2,8 @@ package ru.kharevich.userservice.controller.impl;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.representations.AccessTokenResponse;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +16,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kharevich.userservice.controller.api.UserAdminApi;
 import ru.kharevich.userservice.controller.api.UserApi;
+import ru.kharevich.userservice.dto.request.RegistrationRequest;
+import ru.kharevich.userservice.dto.request.SignInRequest;
 import ru.kharevich.userservice.dto.request.UserRequest;
+import ru.kharevich.userservice.dto.response.AdminResponse;
 import ru.kharevich.userservice.dto.response.UserResponse;
 import ru.kharevich.userservice.model.User;
 import ru.kharevich.userservice.service.UserAdminService;
 import ru.kharevich.userservice.service.UserService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,9 +37,9 @@ public class UserController implements UserApi, UserAdminApi {
 
     private final UserAdminService userAdminService;
 
-    @PostMapping("")
+    @PostMapping("sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse createUser(@Valid @RequestBody UserRequest request) {
+    public UserResponse createUser(@Valid @RequestBody RegistrationRequest request) {
         UserResponse userResponse = userService.createUser(request);
         return userResponse;
     }
@@ -76,6 +82,19 @@ public class UserController implements UserApi, UserAdminApi {
     public UserResponse getUserById(@PathVariable UUID id) {
         UserResponse userResponse = userAdminService.getUserById(id);
         return userResponse;
+    }
+
+    @GetMapping("admin/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<AdminResponse> getAdmins() {
+        return userAdminService.getAllAdmins();
+    }
+
+    @PostMapping("/sign-in")
+    @ResponseStatus(HttpStatus.OK)
+    public AccessTokenResponse sighIn(@RequestBody @Valid SignInRequest request) {
+        AccessTokenResponse response = userService.sighIn(request);
+        return response;
     }
 
 }

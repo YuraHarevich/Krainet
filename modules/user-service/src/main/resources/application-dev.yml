@@ -13,3 +13,28 @@ spring:
       ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    topic:
+      notification-queue: notification-topic
+    producer:
+      bootstrap-server: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      observation-enabled: true
+      properties:
+        spring.json.type.mapping: notification:ru.kharevich.userservice.dto.other.Notification
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://${keycloak.domain}:8080/realms/${keycloak.realm}"
+
+keycloak:
+  domain: localhost
+  clientId: client-api
+  clientSecret: LSlQsC2xlhp7Ks55AKpAAlLkIqYI62FC
+  auth-url: http://${keycloak.domain}:8080
+  realm: krainet-realm
+  default-role: USER

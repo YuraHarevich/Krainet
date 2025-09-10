@@ -1,0 +1,25 @@
+server:
+  port: 8020
+spring:
+  profiles:
+    active: dev
+  application:
+    name: notification-service
+
+  kafka:
+    topic:
+      user: notification-topic
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      observation-enabled: true
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.type.mapping: notification:ru.kharevich.notificationservice.model.Notification
+
+notification:
+  email:
+    enabled: false

@@ -12,6 +12,10 @@ public interface UserValidationService {
 
     User alreadyExistsByUsernameOrEmailExceptPresentUsernameOrEmail(String username, String email, UUID id);
 
+    User alreadyExistsByUsernameOrEmailExceptPresentUsernameOrEmail(String username, String email, String originUsername);
+
     User findIfExistsById(UUID id);
+
+    User findIfExistsByUsername(String username);
 
 }

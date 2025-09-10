@@ -7,7 +7,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.kharevich.userservice.dto.other.ErrorMessage;
+import ru.kharevich.userservice.util.exception.JwtConverterException;
 import ru.kharevich.userservice.util.exception.UserAlreadyExistsException;
+import ru.kharevich.userservice.util.exception.UserModifyingException;
 import ru.kharevich.userservice.util.exception.UserNotFoundException;
 
 import java.time.LocalDateTime;
@@ -17,11 +19,24 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({
-            UserAlreadyExistsException.class
+            UserAlreadyExistsException.class,
+            UserModifyingException.class
     })
     public ResponseEntity<ErrorMessage> handleConflict(Exception exception) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
+                .body(ErrorMessage.builder()
+                        .message(exception.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler({
+            WrongThreadException.class
+    })
+    public ResponseEntity<ErrorMessage> handleUnauthorized(Exception exception) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(ErrorMessage.builder()
                         .message(exception.getMessage())
                         .timestamp(LocalDateTime.now())
@@ -41,6 +56,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
+            JwtConverterException.class
+    })
+    public ResponseEntity<ErrorMessage> handleServiceUnavailable(Exception exception) {
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ErrorMessage.builder()
+                        .message(exception.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler({
             MethodArgumentNotValidException.class
     })
     public ResponseEntity<ErrorMessage> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -49,6 +76,18 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorMessage.builder()
                         .message(error.getDefaultMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
+    @ExceptionHandler({
+            Exception.class
+    })
+    public ResponseEntity<ErrorMessage> handleEverything(Exception exception) {
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ErrorMessage.builder()
+                        .message(exception.getMessage())
                         .timestamp(LocalDateTime.now())
                         .build());
     }
