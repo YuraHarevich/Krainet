@@ -18,4 +18,5 @@ public class NotificationStubService implements NotificationService {
     public void processNotification(Notification notification) {
         log.info("NotificationStubService.processNotification: Notification received : {}", notification);
     }
+
 }

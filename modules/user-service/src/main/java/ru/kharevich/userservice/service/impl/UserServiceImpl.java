@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static ru.kharevich.userservice.util.constants.JwtNameConstants.ROLES_THAT_ARE_UNDER_SUPERVISION;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -95,7 +97,7 @@ public class UserServiceImpl implements UserService, UserAdminService {
         userMapper.updateUserByRequest(request, user);
 
         User updatedUser = userRepository.saveAndFlush(user);
-        notificationProducer.sendNotification(new Notification(tempId, tempUsername, tempEmail, Action.UPDATE));
+        sendNotificationIfNessesary(user, Action.UPDATE);
         return userMapper.toUserResponse(updatedUser);
     }
 
@@ -103,7 +105,7 @@ public class UserServiceImpl implements UserService, UserAdminService {
         String username = jwtUtils.getUsername();
         User user = userValidationService.findIfExistsByUsername(username);
 
-        notificationProducer.sendNotification(new Notification(user.getId(), user.getUsername(), user.getEmail(), Action.GET));
+        sendNotificationIfNessesary(user, Action.GET);
         return userMapper.toUserResponse(user);
     }
 
@@ -111,17 +113,19 @@ public class UserServiceImpl implements UserService, UserAdminService {
         String username = jwtUtils.getUsername();
         User user = userValidationService.findIfExistsByUsername(username);
         authenticationProviderService.deleteUser(user.getKeycloakId().toString());
-
-        notificationProducer.sendNotification(new Notification(user.getId(), user.getUsername(), user.getEmail(), Action.DELETE));
+        sendNotificationIfNessesary(user, Action.DELETE);
     }
 
-    @Override
     public AccessTokenResponse sighIn(SignInRequest request) {
         AccessTokenResponse response = authenticationProviderService.sighIn(request);
         return response;
     }
 
-
-
+    private void sendNotificationIfNessesary(User user, Action action){
+        String currentUserRole = jwtUtils.getUserRole();
+        if(ROLES_THAT_ARE_UNDER_SUPERVISION.contains(currentUserRole)) {
+            notificationProducer.sendNotification(new Notification(user.getId(), user.getUsername(), user.getEmail(), action));
+        }
+    }
 
 }

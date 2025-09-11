@@ -1,6 +1,7 @@
 package ru.kharevich.notificationservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,6 +18,7 @@ import static ru.kharevich.notificationservice.util.NotificationServiceConstants
 @Service
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "notification.email.enabled", havingValue = "true")
+@Slf4j
 public class NotificationServiceImpl implements NotificationService {
 
     private final JavaMailSender emailSender;
@@ -25,6 +27,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     public void processNotification(Notification notification) {
         List<AdminResponse> adminResponseList = client.getAdminList();
+        log.info("sending notification {}", notification);
         adminResponseList.forEach(response -> {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("noreply@baeldung.com");

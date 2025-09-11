@@ -20,7 +20,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             UserAlreadyExistsException.class,
-            UserModifyingException.class
+            UserModifyingException.class,
+            IllegalStateException.class
     })
     public ResponseEntity<ErrorMessage> handleConflict(Exception exception) {
         return ResponseEntity

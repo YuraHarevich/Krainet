@@ -34,7 +34,7 @@ spring:
 keycloak:
   domain: localhost
   clientId: client-api
-  clientSecret: n0hYkJK00475ERn7nDfgSE9C69oQXYCe
+  clientSecret: LSlQsC2xlhp7Ks55AKpAAlLkIqYI62FC
   auth-url: http://${keycloak.domain}:8080
   realm: krainet-realm
   default-role: USER
