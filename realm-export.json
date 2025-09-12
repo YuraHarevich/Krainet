@@ -401,20 +401,20 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
-    "id" : "dc8a90bf-6897-43d7-8c18-4e0b82736722",
+    "id" : "eae3b0e0-bcf4-497b-bbdd-47b06e8e9301",
     "username" : "admin1",
     "firstName" : "Yura",
     "lastName" : "Kharevich",
-    "email" : "admin@gmail.com",
+    "email" : "admin1@gmail.com",
     "emailVerified" : false,
-    "createdTimestamp" : 1757695458904,
+    "createdTimestamp" : 1757699855471,
     "enabled" : true,
     "totp" : false,
     "credentials" : [ {
-      "id" : "69c11dff-b815-44c7-8064-de6a11257ba4",
+      "id" : "c145ae5c-3b57-4dff-9845-762c9762e71d",
       "type" : "password",
-      "createdDate" : 1757695458949,
-      "secretData" : "{\"value\":\"iu0OW7/fbiSuaKP4V3Tj3t+GkgzEMoJgVEIWDgvzVuc=\",\"salt\":\"S37+eqQXWRN4j/UdMdEy4A==\",\"additionalParameters\":{}}",
+      "createdDate" : 1757699855622,
+      "secretData" : "{\"value\":\"fH3jTBkiuwo6LXp8jPThd8vZhhxBRWwkdJn7km3q0Ss=\",\"salt\":\"JwCgcn8bXYRelNZq44+YSw==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
     } ],
     "disableableCredentialTypes" : [ ],
@@ -708,7 +708,15 @@
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
     "defaultClientScopes" : [ "web-origins", "service_account", "acr", "profile", "roles", "basic", "email" ],
-    "optionalClientScopes" : [ "address", "phone", "offline_access", "organization", "microprofile-jwt" ]
+    "optionalClientScopes" : [ "address", "phone", "offline_access", "organization", "microprofile-jwt" ],
+    "authorizationSettings" : {
+      "allowRemoteResourceManagement" : true,
+      "policyEnforcementMode" : "ENFORCING",
+      "resources" : [ ],
+      "policies" : [ ],
+      "scopes" : [ ],
+      "decisionStrategy" : "UNANIMOUS"
+    }
   }, {
     "id" : "b52fc1ff-22a9-4218-8102-64b02f3f59cc",
     "clientId" : "realm-management",
