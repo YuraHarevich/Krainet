@@ -210,9 +210,11 @@ services:
     networks:
       - microservices-net
 
+
 networks:
   microservices-net:
     driver: bridge
+
 volumes:
   users_psql:
   postgres_keycloak:
