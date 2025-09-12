@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [traceId=%X{traceId:-NO_TRACE}, spanId=%X{spanId:-NO_SPAN}] %logger{36} - %msg%n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
@@ -28,7 +28,7 @@
             </message>
         </format>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ALL</level>
+            <level>INFO</level>
         </filter>
     </appender>
 
@@ -37,18 +37,20 @@
             <appender-ref ref="CONSOLE"/>
         </root>
 
-        <logger name="ru.kharevich" level="DEBUG"/>
+        <logger name="ru.kharevich" level="INFO"/>
         <logger name="org.springframework" level="INFO"/>
-        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="org.hibernate.SQL" level="INFO"/>
     </springProfile>
 
     <springProfile name="prod">
-        <root level="ALL">
+        <root level="INFO">
             <appender-ref ref="LOKI_PROD"/>
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
     <logger name="com.github.loki4j" level="WARN"/>
+    <logger name="org.apache.kafka" level="WARN"/>
+    <logger name="org.springframework.kafka" level="WARN"/>
 
 </configuration>
