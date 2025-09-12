@@ -402,7 +402,7 @@
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
     "id" : "dc8a90bf-6897-43d7-8c18-4e0b82736722",
-    "username" : "admin",
+    "username" : "admin1",
     "firstName" : "Yura",
     "lastName" : "Kharevich",
     "email" : "admin@gmail.com",
@@ -708,7 +708,7 @@
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
     "defaultClientScopes" : [ "web-origins", "service_account", "acr", "profile", "roles", "basic", "email" ],
-    "optionalClientScopes" : [ "address", "phone", "offline_access", "organization", "microprofile-jwt" ],
+    "optionalClientScopes" : [ "address", "phone", "offline_access", "organization", "microprofile-jwt" ]
   }, {
     "id" : "b52fc1ff-22a9-4218-8102-64b02f3f59cc",
     "clientId" : "realm-management",
